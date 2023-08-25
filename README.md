@@ -39,14 +39,13 @@ Here's a brief overview of the components and architecture of the app:
 2. **State Mapping Page**: This page allows users to upload a dataset with a 'state_name' column and perform LGD mapping for states. Unmatched state names can be updated with variations.
 
 3. **District Mapping Page**: After mapping states, users can navigate to this page to map districts. Users can also update district name variations.
+4. **Sub-District Mapping Page**: If sub-districts are included in the data, this page allows users to map them and update variations for unmatched names.
 
-4. **Block Mapping Page**: Users can proceed to map blocks after mapping districts. Similar to previous steps, unmatched block names can be updated with variations.
+5. **Block Mapping Page**: Users can proceed to map blocks after mapping districts. Similar to previous steps, unmatched block names can be updated with variations.
 
-5. **Gram Panchayat Mapping Page**: This page facilitates mapping of gram panchayats. The process includes handling unmatched GP names and providing name variations.
+6. **Gram Panchayat Mapping Page**: This page facilitates mapping of gram panchayats. The process includes handling unmatched GP names and providing name variations.
 
-6. **Village Mapping Page**: Users can map villages on this page, with options to update variations for unmatched village names.
-
-7. **Sub-District Mapping Page**: If sub-districts are included in the data, this page allows users to map them and update variations for unmatched names.
+7. **Village Mapping Page**: Users can map villages on this page, with options to update variations for unmatched village names.
 
 8. **Download Mapped Data**: At each mapping step, the app generates a downloadable CSV file containing the mapped data. Users can download these files for further analysis.
 
