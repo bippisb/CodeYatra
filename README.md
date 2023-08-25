@@ -1,6 +1,6 @@
 # CodeYatra LGD Mapping App
 
-Welcome to the CodeYatra LGD Mapping App! 🌟 This app simplifies the process of mapping LGD (Local Government Directory) codes for different administrative levels such as states, districts, sub-districts, blocks, gram panchayats, and villages in India. Whether you're a researcher, data analyst, or just curious about India's geography, this app is designed to make mapping a breeze.
+Welcome to the "CodeYatra" LGD Mapping App! 🌟 This app simplifies the process of mapping LGD (Local Government Directory) codes for different administrative levels such as states, districts, sub-districts, blocks, gram panchayats, and villages in India. Whether you're a researcher, data analyst, or just curious about India's geography, this app is designed to make mapping a breeze.
 
 ### Basic Information
 
