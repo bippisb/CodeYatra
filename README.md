@@ -4,13 +4,13 @@ Welcome to the CodeYatra LGD Mapping App! 🌟 This app simplifies the process o
 
 ### Basic Information
 
-This Streamlit web application, named "CodeYatra LGD Mapping App," is developed to facilitate the mapping of LGD codes across various administrative levels in India. The app allows users to upload CSV or Excel files containing location data and then performs LGD code mapping based on the provided data. It offers mapping for states, districts, sub-districts, blocks, gram panchayats (GPs), and villages.
+This Streamlit web application, named "CodeYatra" is developed to facilitate the mapping of LGD codes across various administrative levels in India. The app allows users to upload CSV or Excel files containing location data and then performs LGD code mapping based on the provided data. It offers mapping for states, districts, sub-districts, blocks, gram panchayats (GPs), and villages.
 
 The app is structured into different sections for each administrative level, and it guides users through the mapping process, starting from states down to villages. The user is required to upload files containing location data for each level, and the app performs the mapping using predefined mappings and variations.
 
 ### Architecture
 
-The CodeYatra LGD Mapping App is built using Python and the Streamlit library, which allows for the creation of interactive web applications with minimal code. The app follows a modular architecture, with different functions responsible for specific tasks such as data processing, mapping, variation updates, and page navigation.
+The CodeYatra is built using Python and the Streamlit library, which allows for the creation of interactive web applications with minimal code. The app follows a modular architecture, with different functions responsible for specific tasks such as data processing, mapping, variation updates, and page navigation.
 
 Here's a brief overview of the components and architecture of the app:
 
