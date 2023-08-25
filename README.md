@@ -1,4 +1,4 @@
-## CodeYatra LGD Mapping App
+# CodeYatra LGD Mapping App
 
 Welcome to the CodeYatra LGD Mapping App! 🌟 This app simplifies the process of mapping LGD (Local Government Directory) codes for different administrative levels such as states, districts, sub-districts, blocks, gram panchayats, and villages in India. Whether you're a researcher, data analyst, or just curious about India's geography, this app is designed to make mapping a breeze.
 
@@ -27,7 +27,7 @@ Here's a brief overview of the components and architecture of the app:
 - **Web Interface**: The web interface is created using Streamlit's user interface components. It features buttons, file uploaders, data displays, information messages, and interactive elements to guide users through the mapping process.
 
 
-## Features
+### Features
 
 - Streamlined mapping process for states, districts,sub-districts, blocks, gram panchayats and villages .
 - Handling of unmatched names by updating variations for accurate mapping.
@@ -53,13 +53,13 @@ Here's a brief overview of the components and architecture of the app:
 Please note that variations for unmatched names should be provided carefully to ensure accurate mapping.
 
 
-## Getting Started
+### Getting Started
 
 Follow the instructions below to get the CodeYatra LGD Mapping App up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
-- Python 3.x
+- Python 3.9.4
 - Streamlit (`pip install streamlit`)
 - pandas (`pip install pandas`)
 
@@ -68,13 +68,13 @@ Follow the instructions below to get the CodeYatra LGD Mapping App up and runnin
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/CodeYatra-LGD-Mapping-App.git
+   git clone https://github.com/bippisb/CodeYatra.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd CodeYatra-LGD-Mapping-App
+   cd CodeYatra
    ```
 
 3. Install the required dependencies:
@@ -98,12 +98,12 @@ Follow the instructions below to get the CodeYatra LGD Mapping App up and runnin
 
 
 
-## References
+### References
 
 - Streamlit Documentation: [Streamlit](https://streamlit.io/)
 - LGD Data: [Local Government Directory](https://lgdirectory.gov.in/)
 
-## Contact Information
+### Contact Information
 
 For questions, feedback, or concerns, please contact [Email](saurabh_harak@isb.edu) .
 
