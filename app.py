@@ -207,7 +207,7 @@ def state_mapping_page(dataset_selected=False):
     with st.spinner("Processing..."):
         state_mapping = get_state_mappings()
         mapped_dataset = create_mapped_dataset(dataset, state_mapping)
-        unmatched_names = mapped_dataset[mapped_dataset['state_code'] == -1]['state_name']
+        unmatched_names = mapped_dataset[mapped_dataset['state_code'] == -2]['state_name']
 
     if unmatched_names.empty:
         st.success('No Unmatched State Names')
