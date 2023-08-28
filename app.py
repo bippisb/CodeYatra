@@ -421,12 +421,9 @@ def gp_page():
     gp_mapping = populate_gp_mapping()
 
     mapped_dataset = create_gp_mapped_dataset(gp_dataset, gp_mapping)
-    
+
     # Check if there are any unmatched names
     unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['panchayat_name']
-    """ import mapping
-    unmatched_names,mapped_dataset = mapping.main_gp()
-    unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['panchayat_name'] """
     if unmatched_names.empty:
         # Display a message if there are no unmatched names
         st.success('No Unmatched GP Names')
@@ -450,7 +447,6 @@ def gp_page():
         st.write(f'Unmatched GP Count: '+str(len(unmatched_names.unique())))
         st.write(unmatched_names.unique())
         
-
         # Display the note
         note = "Please provide the GP name variations separated by commas or a single GP name."
         st.info(note)

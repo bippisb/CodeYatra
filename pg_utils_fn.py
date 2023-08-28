@@ -234,7 +234,61 @@ def create_district_mapped_dataset(dataset, mapping):
     return dataset
 import sqlite3
 
+import sqlite3
+
+import sqlite3
+
 def update_variations(unmatched_names, mapping, entity_table_name):
+    """
+    Updates the variations of unmatched names in the given mapping dictionary for a specific entity table.
+
+    Parameters:
+    - unmatched_names (list): A list of unmatched names to update the variations for.
+    - mapping (dict): A dictionary mapping entity names to their variations.
+    - entity_table_name (str): The name of the entity table to update the variations in.
+
+    Returns:
+    - str: The message "Done" indicating that the variations have been updated successfully.
+    """
+    try:
+        conn = sqlite3.connect('lgd_database.db')
+        cursor = conn.cursor()
+
+        for index, unmatched_name in enumerate(unmatched_names):
+            entity_name = create_selectbox_widget(f'Select {entity_table_name} name {index+1}:', list(mapping))
+            if not entity_name:
+                continue
+
+            entity_exists = entity_name in mapping
+            if not entity_exists:
+                st.error(f'{entity_table_name} name not found in the table. Please enter a valid {entity_table_name} name.')
+                continue
+
+            name_variant = st.text_input(f'Select an appropriate value for the following variant {unmatched_name}:')
+            if not name_variant:
+                continue
+
+            cursor.execute(f"SELECT entityName, entityNameVariants, entityLGDCode FROM {entity_table_name}")
+            entity_data = cursor.fetchall()
+
+            for entity_name_db, entityNameVariants, entity_LGD_Code in entity_data:
+                if entity_name.lower() == entity_name_db.lower():
+                    new_variants = f"{entityNameVariants.strip()}, {name_variant.strip()}" if entityNameVariants else name_variant
+                    cursor.execute(f"UPDATE {entity_table_name} SET entityNameVariants = ? WHERE entityLGDCode = ?", (new_variants.strip(), int(entity_LGD_Code)))
+                    st.success(f'{entity_name_db} Variation Updated Successfully.')
+                    break
+
+            conn.commit()
+            st.write('---')
+
+        conn.close()
+
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+    return "Done"
+
+
+def update_variationso(unmatched_names, mapping, entity_table_name):
     """
     Updates the variations of a given entity in the database.
 
@@ -472,7 +526,7 @@ def populate_gp_mapping():
     Populates a gp mapping dictionary using data from a database and a local file.
 
     Returns:
-        A defaultdict containing the mapping of gp names to their respective codes.
+        A dictionary containing the mapping of gp names to their respective codes.
     """
     state_dataset = pd.read_csv('data.csv')
     data = fetch_gp_mapping()
@@ -480,29 +534,29 @@ def populate_gp_mapping():
     unique_rows_lower = unique_rows.apply(lambda x: (x['panchayat_name'].strip().lower(), x['block_code']), axis=1).tolist()
 
     entity_mapping = {}
-    edname = "Not Available"
+
+    # Populate mapping for entity name and variants
     for entity_name, entity_code, entity_variants, parent_code in data:
         for row in unique_rows_lower:
             entity_name_lower = row[0]
             state_code = row[1]
-            if entity_name_lower == entity_name.lower():
-                if int(parent_code) == int(state_code):
-                    entity_mapping[entity_name_lower.lower()] = entity_code
-                    if entity_variants:
-                        for variant in entity_variants.split(','):
-                            entity_mapping[variant.strip().lower()] = entity_code
-
-    for entity_name, entity_code, entity_variants, parent_code in data:
-        if edname.lower() == entity_name.lower():
-            print(entity_name)
-            if str(parent_code) == str(0):
-                entity_mapping[entity_name.lower()] = entity_code
+            if entity_name_lower == entity_name.lower() and int(parent_code) == int(state_code):
+                entity_mapping[entity_name_lower] = entity_code
                 if entity_variants:
                     for variant in entity_variants.split(','):
                         entity_mapping[variant.strip().lower()] = entity_code
 
+    # Populate mapping for special case entity name
+    edname = "Not Available"
+    for entity_name, entity_code, entity_variants, parent_code in data:
+        if edname.lower() == entity_name.lower() and str(parent_code) == str(0):
+            entity_mapping[entity_name.lower()] = entity_code
+            if entity_variants:
+                for variant in entity_variants.split(','):
+                    entity_mapping[variant.strip().lower()] = entity_code
 
     return entity_mapping
+
 
 def populate_village_mapping():
     """
