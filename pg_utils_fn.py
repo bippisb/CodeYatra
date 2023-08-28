@@ -232,36 +232,55 @@ def create_district_mapped_dataset(dataset, mapping):
     results = pool.starmap(process_district_name, zip(dataset['district_name'], [mapping]*len(dataset)))
     dataset['district_name'], dataset['district_code'] = zip(*results)
     return dataset
+import sqlite3
+
 def update_variations(unmatched_names, mapping, entity_table_name):
+    """
+    Updates the variations of a given entity in the database.
+
+    Parameters:
+    - unmatched_names (list): A list of unmatched names.
+    - mapping (dict): A dictionary mapping entity names to their corresponding values.
+    - entity_table_name (str): The name of the entity table.
+
+    Returns:
+    - str: The status message indicating the success of the function.
+    """
     try:
-        #st.write(f'Unmatched Name: {unmatched_names}')
         entity_name = create_selectbox_widget(f'Select {entity_table_name} name :', list(mapping))
+        if not entity_name:
+            return
 
         entity_exists = entity_name in mapping
-        
-        if entity_name and not entity_exists:
+        if not entity_exists:
             st.error(f'{entity_table_name} name not found in the table. Please enter a valid {entity_table_name} name.')
+            return
 
         name_variant = st.text_input(f'Enter name variant {unmatched_names[0]}:')
-        if entity_name and name_variant and entity_exists:
-            conn = sqlite3.connect('lgd_database.db')
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT entityName, entityNameVariants, entityLGDCode FROM {entity_table_name}")
-            entity_data = cursor.fetchall()
-            for entity_name_db, entityNameVariants, entity_LGD_Code in entity_data:
-                if entity_name.lower() == entity_name_db.lower():
-                    new_variants = f"{entityNameVariants.strip()}, {name_variant.strip()}" if entityNameVariants else name_variant
-                    cursor.execute(f"UPDATE {entity_table_name} SET entityNameVariants = ? WHERE entityLGDCode = ?", (new_variants.strip(), int(entity_LGD_Code)))
-                    st.success(f'{entity_name_db} Variation Updated Successfully.')
-                    
+        if not name_variant:
+            return
 
-            conn.commit()
-            conn.close()
-            st.write('---')
+        conn = sqlite3.connect('lgd_database.db')
+        cursor = conn.cursor()
+
+        cursor.execute(f"SELECT entityName, entityNameVariants, entityLGDCode FROM {entity_table_name}")
+        entity_data = cursor.fetchall()
+
+        for entity_name_db, entityNameVariants, entity_LGD_Code in entity_data:
+            if entity_name.lower() == entity_name_db.lower():
+                new_variants = f"{entityNameVariants.strip()}, {name_variant.strip()}" if entityNameVariants else name_variant
+                cursor.execute(f"UPDATE {entity_table_name} SET entityNameVariants = ? WHERE entityLGDCode = ?", (new_variants.strip(), int(entity_LGD_Code)))
+                st.success(f'{entity_name_db} Variation Updated Successfully.')
+                break
+
+        conn.commit()
+        conn.close()
+        st.write('---')
 
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
     return "Done"
+
 
 def update_variations_without_parent(unmatched_names, mapping, entity_table_name):
 
