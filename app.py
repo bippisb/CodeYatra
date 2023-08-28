@@ -418,15 +418,15 @@ def gp_page():
     gp_dataset = pd.read_csv('data.csv')
     st.write(gp_dataset.head())
     # Apply gp mapping and create a new dataset
-    #gp_mapping = populate_gp_mapping()
+    gp_mapping = populate_gp_mapping()
 
-    #mapped_dataset = create_gp_mapped_dataset(gp_dataset, gp_mapping)
+    mapped_dataset = create_gp_mapped_dataset(gp_dataset, gp_mapping)
     
     # Check if there are any unmatched names
-    #unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['panchayat_name']
-    import mapping
-    unmatched_names,mapped_dataset = mapping.main_gp()
     unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['panchayat_name']
+    """ import mapping
+    unmatched_names,mapped_dataset = mapping.main_gp()
+    unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['panchayat_name'] """
     if unmatched_names.empty:
         # Display a message if there are no unmatched names
         st.success('No Unmatched GP Names')
