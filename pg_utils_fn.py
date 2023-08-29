@@ -232,10 +232,11 @@ def create_district_mapped_dataset(dataset, mapping):
     results = pool.starmap(process_district_name, zip(dataset['district_name'], [mapping]*len(dataset)))
     dataset['district_name'], dataset['district_code'] = zip(*results)
     return dataset
+
+
 import sqlite3
 
-
-def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=10):
+def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=1):
     """
     Updates the variations of unmatched names in the given mapping dictionary for a specific entity table.
 
@@ -255,7 +256,9 @@ def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=10
         num_unmatched = len(unmatched_names)
         num_chunks = (num_unmatched + chunk_size - 1) // chunk_size
 
-        for chunk_index in range(num_chunks):
+        chunk_index = 0  # Initialize chunk index
+
+        while chunk_index < num_chunks:
             start_idx = chunk_index * chunk_size
             end_idx = min((chunk_index + 1) * chunk_size, num_unmatched)
             current_chunk = unmatched_names[start_idx:end_idx]
@@ -287,11 +290,23 @@ def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=10
                 conn.commit()
                 st.write('---')
 
+            chunk_index += 1  # Increment chunk index
+
+            if chunk_index < num_chunks:
+                load_next_button = st.button("Load Next Chunk")
+                if not load_next_button:
+                    break  # Break the loop if button is not clicked
+
         conn.close()
 
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
     return "Done"
+
+
+
+
+
 
 
 
@@ -588,7 +603,7 @@ def populate_gp_mapping():
     state_dataset = pd.read_csv('data.csv')
     data = fetch_gp_mapping()
     unique_rows = state_dataset.drop_duplicates(subset=['panchayat_name'])
-    unique_rows_lower = unique_rows.apply(lambda x: (x['panchayat_name'].strip().lower(), x['block_code']), axis=1).tolist()
+    unique_rows_lower = unique_rows.apply(lambda x: (str(x['panchayat_name']).strip().lower(), x['block_code']), axis=1).tolist()
 
     entity_mapping = {}
 
