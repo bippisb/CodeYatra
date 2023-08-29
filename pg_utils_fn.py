@@ -234,11 +234,6 @@ def create_district_mapped_dataset(dataset, mapping):
     return dataset
 import sqlite3
 
-import sqlite3
-
-import sqlite3
-
-import sqlite3
 
 def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=10):
     """
