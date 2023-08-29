@@ -238,7 +238,69 @@ import sqlite3
 
 import sqlite3
 
-def update_variations(unmatched_names, mapping, entity_table_name):
+import sqlite3
+
+def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=100):
+    """
+    Updates the variations of unmatched names in the given mapping dictionary for a specific entity table.
+
+    Parameters:
+    - unmatched_names (list): A list of unmatched names to update the variations for.
+    - mapping (dict): A dictionary mapping entity names to their variations.
+    - entity_table_name (str): The name of the entity table to update the variations in.
+    - chunk_size (int): The size of each processing chunk.
+
+    Returns:
+    - str: The message "Done" indicating that the variations have been updated successfully.
+    """
+    try:
+        conn = sqlite3.connect('lgd_database.db')
+        cursor = conn.cursor()
+
+        num_unmatched = len(unmatched_names)
+        num_chunks = (num_unmatched + chunk_size - 1) // chunk_size
+
+        for chunk_index in range(num_chunks):
+            start_idx = chunk_index * chunk_size
+            end_idx = min((chunk_index + 1) * chunk_size, num_unmatched)
+            current_chunk = unmatched_names[start_idx:end_idx]
+
+            for index, unmatched_name in enumerate(current_chunk):
+                entity_name = create_selectbox_widget(f'Select {entity_table_name} name {start_idx + index + 1}:', list(mapping))
+                if not entity_name:
+                    continue
+
+                entity_exists = entity_name in mapping
+                if not entity_exists:
+                    st.error(f'{entity_table_name} name not found in the table. Please enter a valid {entity_table_name} name.')
+                    continue
+
+                name_variant = st.text_input(f'Select an appropriate value for the following variant {unmatched_name}:')
+                if not name_variant:
+                    continue
+
+                cursor.execute(f"SELECT entityName, entityNameVariants, entityLGDCode FROM {entity_table_name}")
+                entity_data = cursor.fetchall()
+
+                for entity_name_db, entityNameVariants, entity_LGD_Code in entity_data:
+                    if entity_name.lower() == entity_name_db.lower():
+                        new_variants = f"{entityNameVariants.strip()}, {name_variant.strip()}" if entityNameVariants else name_variant
+                        cursor.execute(f"UPDATE {entity_table_name} SET entityNameVariants = ? WHERE entityLGDCode = ?", (new_variants.strip(), int(entity_LGD_Code)))
+                        st.success(f'{entity_name_db} Variation Updated Successfully.')
+                        break
+
+                conn.commit()
+                st.write('---')
+
+        conn.close()
+
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+    return "Done"
+
+
+
+def update_variationsold(unmatched_names, mapping, entity_table_name):
     """
     Updates the variations of unmatched names in the given mapping dictionary for a specific entity table.
 
