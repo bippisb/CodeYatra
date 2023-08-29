@@ -240,7 +240,7 @@ import sqlite3
 
 import sqlite3
 
-def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=100):
+def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=10):
     """
     Updates the variations of unmatched names in the given mapping dictionary for a specific entity table.
 
