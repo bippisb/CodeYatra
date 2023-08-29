@@ -293,7 +293,8 @@ def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=1)
             chunk_index += 1  # Increment chunk index
 
             if chunk_index < num_chunks:
-                load_next_button = st.button("Load Next Chunk")
+                unique_button_key = f"load_next_button_{chunk_index}"
+                load_next_button = st.button("Load Next Chunk", key=unique_button_key)
                 if not load_next_button:
                     break  # Break the loop if button is not clicked
 
@@ -302,6 +303,7 @@ def update_variations(unmatched_names, mapping, entity_table_name, chunk_size=1)
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
     return "Done"
+
 
 
 
