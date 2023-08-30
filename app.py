@@ -1,7 +1,7 @@
 import base64
 import streamlit as st
 import pandas as pd
-from pg_utils_fn import create_entity_name_list, fetch_block_mapping
+from pg_utils_fn import create_entity_name_list, fetch_block_mapping, fetch_gp_mapping
 from pg_utils_fn import fetch_district_mapping
 from pg_utils_fn import populate_entity_mapping
 from pg_utils_fn import load_file
@@ -55,7 +55,8 @@ def home_page():
     
 
     if st.button('Start Mapping', key='sub_mapping_button'):
-        redirect_to_subset_dataset_page()
+        #redirect_to_subset_dataset_page()
+        redirect_to_state_mapping_page()
 
 
 def redirect_to_update_dataset_page():
@@ -360,8 +361,8 @@ def block_page():
         st.write(mapped_dataset.head())
         generate_download_link(mapped_dataset)
         if st.button('Start Panchayat Mapping', key='Panchayat_mapping_button'):
-            if 'panchayat_name' not in mapped_dataset.columns:
-                        st.error("Error: The dataset does not contain the 'panchayat_name' column.")
+            if 'gp_name' not in mapped_dataset.columns:
+                        st.error("Error: The dataset does not contain the 'gp_name' column.")
                         return
             redirect_to_panchayat_page()
 
@@ -396,8 +397,8 @@ def block_page():
             generate_download_link(mapped_dataset)
 
             if st.button('Start Panchayat Mapping', key='Panchayat_mapping_button'):
-                if 'panchayat_name' not in mapped_dataset.columns:
-                            st.error("Error: The dataset does not contain the 'panchayat_name' column.")
+                if 'gp_name' not in mapped_dataset.columns:
+                            st.error("Error: The dataset does not contain the 'gp_name' column.")
                             return
                 redirect_to_panchayat_page()
 
@@ -416,14 +417,17 @@ def gp_page():
     st.title('GP LGD Mapping')
     st.subheader("Before GP LGD Mapping")
     gp_dataset = pd.read_csv('data.csv')
+    data= fetch_gp_mapping()
     st.write(gp_dataset.head())
+    unmatched_names = None
     # Apply gp mapping and create a new dataset
-    gp_mapping = populate_gp_mapping()
-
+    
+    #gp_mapping = populate_gp_mapping()
+    gp_mapping = populate_entity_mapping(data,'gp_name','block_code')
     mapped_dataset = create_gp_mapped_dataset(gp_dataset, gp_mapping)
 
     # Check if there are any unmatched names
-    unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['panchayat_name']
+    unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['gp_name']
     if unmatched_names.empty:
         # Display a message if there are no unmatched names
         st.success('No Unmatched GP Names')
@@ -457,9 +461,9 @@ def gp_page():
         mapped_dataset = create_gp_mapped_dataset(gp_dataset, gp_mapping)
         entity_name = create_entity_name_list()
         # Check if there are any unmatched names
-        unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['panchayat_name']
+        unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['gp_name']
         update_variations(unmatched_names.unique(), entity_name, "gp")
-        unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['panchayat_name']
+        unmatched_names = mapped_dataset[mapped_dataset['gp_code'] == -2]['gp_name']
         if unmatched_names.empty:
             st.success('GP Name Variations Updated Successfully.')
             # Create a CSV file in memory

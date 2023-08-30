@@ -604,8 +604,8 @@ def populate_gp_mapping():
     """
     state_dataset = pd.read_csv('data.csv')
     data = fetch_gp_mapping()
-    unique_rows = state_dataset.drop_duplicates(subset=['panchayat_name'])
-    unique_rows_lower = unique_rows.apply(lambda x: (str(x['panchayat_name']).strip().lower(), x['block_code']), axis=1).tolist()
+    unique_rows = state_dataset.drop_duplicates(subset=['gp_name'])
+    unique_rows_lower = unique_rows.apply(lambda x: (str(x['gp_name']).strip().lower(), x['block_code']), axis=1).tolist()
 
     entity_mapping = {}
 
@@ -665,8 +665,8 @@ def create_gp_mapped_dataset(dataset, mapping):
     """
     Create a mapped dataset by associating gp codes with gp names in the dataset.
     """
-    dataset['panchayat_name'] = dataset['panchayat_name'].str.strip()
-    dataset['gp_code'] = dataset['panchayat_name'].str.lower().map(mapping)
+    dataset['gp_name'] = dataset['gp_name'].str.strip()
+    dataset['gp_code'] = dataset['gp_name'].str.lower().map(mapping)
     dataset.loc[dataset['gp_code'].isnull(), 'gp_code'] = -2
     return dataset
 
